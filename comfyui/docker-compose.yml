@@ -1,0 +1,18 @@
+services:
+  comfyui:
+    image: dustynv/comfyui:r36.4.3-cu128-24.04
+    container_name: comfyui
+    restart: unless-stopped
+    network_mode: host
+
+    volumes:
+      - /data:/data
+      - /data/comfyui/models:/opt/ComfyUI/models
+      - /data/comfyui/output:/opt/ComfyUI/output
+      - /data/comfyui/input:/opt/ComfyUI/input
+      - /data/comfyui/text_encoders:/opt/ComfyUI/text_encoders
+      - /data/comfyui/diffusion_models:/opt/ComfyUI/diffusion_models
+      - /data/comfyui/vae:/opt/ComfyUI/vae
+      #- /data/comfyui/custom_nodes:/opt/ComfyUI/custom_nodes
+    devices:
+      - nvidia.com/gpu=all
