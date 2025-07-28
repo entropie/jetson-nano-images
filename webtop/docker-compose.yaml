@@ -1,0 +1,25 @@
+---
+services:
+  webtop:
+    image: lscr.io/linuxserver/webtop:latest
+    container_name: webtop
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - SUBFOLDER=/
+      - TITLE=Webtop
+      - DOCKER_MODS=linuxserver/mods:universal-package-install
+      - INSTALL_PACKAGES=ruby
+    volumes:
+      - /data/webtop:/config
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 4000:3000
+      - 3001:3001
+    shm_size: "1gb"
+    restart: unless-stopped
+    devices:
+      - nvidia.com/gpu=all    
