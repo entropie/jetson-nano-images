@@ -5,10 +5,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       git cmake build-essential pkg-config ca-certificates curl libcurl4-openssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install -U \
+# HF CLI (für gezieltes Datei-Download)
+RUN pip3 install -U --no-cache-dir \
   --index-url https://pypi.org/simple \
   --extra-index-url https://pypi.ngc.nvidia.com \
-  "transformers>=4.53.0" "timm>=1.0.16" pillow
+  "huggingface_hub[cli]" pillow
 
 # ---- llama.cpp (HEAD) mit CUDA bauen ----
 ARG LLAMA_REF=master
@@ -23,17 +24,18 @@ RUN git clone https://github.com/ggerganov/llama.cpp /opt/llama.cpp && \
     install -m0755 build/bin/* /usr/local/bin/
 
 # Startscript
-COPY start-gemma3n.sh /usr/local/bin/start-gemma3n.sh
-RUN chmod +x /usr/local/bin/start-gemma3n.sh
+COPY start-gemma34b.sh /usr/local/bin/start-gemma34b.sh
+RUN chmod +x /usr/local/bin/start-gemma34b.sh
 
-# Defaults + CUDA-Workarounds gegen leere Antworten
+# Defaults + konservative CUDA-Settings (bei Bedarf anpassen)
 ENV DATA_DIR=/data/models \
-    MODEL_REPO=bartowski/google_gemma-3n-E4B-it-GGUF \
-    MODEL_FILE=google_gemma-3n-E4B-it-Q4_K_M.gguf \
-    HOST=0.0.0.0 PORT=8080 CTX=2048 NGL=999 THREADS=6 \
+    MODEL_REPO=bartowski/google_gemma-3-4b-it-GGUF \
+    MODEL_FILE=gemma-3-4b-it-Q5_K_M.gguf \
+    MMPROJ_FILE=mmproj-gemma-3-4b-it-f16.gguf \
+    HOST=0.0.0.0 PORT=8080 CTX=1024 NGL=999 THREADS=6 \
     GGML_CUDA_FORCE_CUBLAS=1 \
     GGML_CUDA_DISABLE_GRAPHS=1
 
 EXPOSE 8080
 WORKDIR /workspace
-ENTRYPOINT ["/usr/local/bin/start-gemma3n.sh"]
+ENTRYPOINT ["/usr/local/bin/start-gemma34b.sh"]

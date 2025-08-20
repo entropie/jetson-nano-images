@@ -1,0 +1,6 @@
+
+# secrets
+.llamaignore
+.env
+*.env
+llama.cpp-gemma3b/.env

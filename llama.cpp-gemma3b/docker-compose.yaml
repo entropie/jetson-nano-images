@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  gemma34b:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gemma34b-gguf-server:latest
+    container_name: gemma34b
+    ports:
+      - "8092:8080"
+    volumes:
+      - /data:/data
+    environment:
+      HF_TOKEN: ${HF_TOKEN:?set HF_TOKEN in your .env}
+      # Model (bartowski, mit 'google_' Präfix)
+      MODEL_REPO: bartowski/google_gemma-3-4b-it-GGUF
+      MODEL_FILE: google_gemma-3-4b-it-Q5_K_M.gguf
+      MMPROJ_FILE: mmproj-google_gemma-3-4b-it-f16.gguf
+      # Server/Perf
+      HOST: 0.0.0.0
+      PORT: "8080"
+      CTX: "1024" # bei Luft: 1536; 2048 kann knapp werden
+      NGL: "999"
+      THREADS: "6"
+      GGML_CUDA_FORCE_CUBLAS: "1"
+      GGML_CUDA_DISABLE_GRAPHS: "1"
+    devices:
+      - "nvidia.com/gpu=all"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/v1/models >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
