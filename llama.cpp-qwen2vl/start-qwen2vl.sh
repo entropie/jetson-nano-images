@@ -8,7 +8,7 @@ MMPROJ_FILE="${MMPROJ_FILE:-mmproj-Qwen2-VL-2B-Instruct-f16.gguf}"
 
 HOST="${HOST:-0.0.0.0}"
 PORT="${PORT:-8080}"
-CTX="${CTX:-2048}"
+CTX="${CTX:-1024}"
 NGL="${NGL:-999}"
 THREADS="${THREADS:-$(nproc)}"
 

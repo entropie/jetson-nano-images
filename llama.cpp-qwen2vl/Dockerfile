@@ -32,7 +32,7 @@ ENV DATA_DIR=/data/models \
     MODEL_REPO=bartowski/Qwen2-VL-2B-Instruct-GGUF \
     MODEL_FILE=Qwen2-VL-2B-Instruct-Q4_K_M.gguf \
     MMPROJ_FILE=mmproj-Qwen2-VL-2B-Instruct-f16.gguf \
-    HOST=0.0.0.0 PORT=8080 CTX=2048 NGL=999 THREADS=6 \
+    HOST=0.0.0.0 PORT=8080 CTX=1024 NGL=999 THREADS=6 \
     GGML_CUDA_FORCE_CUBLAS=1 \
     GGML_CUDA_DISABLE_GRAPHS=1
 
