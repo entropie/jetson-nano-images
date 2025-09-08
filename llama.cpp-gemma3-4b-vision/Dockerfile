@@ -1,17 +1,14 @@
 FROM dustynv/l4t-pytorch:r36.4.0
 
-# Tools + curl + libcurl-dev (ggml curl support)
 RUN apt-get update && apt-get install -y --no-install-recommends \
       git cmake build-essential pkg-config ca-certificates curl libcurl4-openssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# HF CLI (für gezieltes Datei-Download)
 RUN pip3 install -U --no-cache-dir \
   --index-url https://pypi.org/simple \
   --extra-index-url https://pypi.ngc.nvidia.com \
   "huggingface_hub[cli]" pillow
 
-# ---- llama.cpp (HEAD) mit CUDA bauen ----
 ARG LLAMA_REF=master
 RUN git clone https://github.com/ggerganov/llama.cpp /opt/llama.cpp && \
     cd /opt/llama.cpp && git checkout ${LLAMA_REF} && \
@@ -23,11 +20,9 @@ RUN git clone https://github.com/ggerganov/llama.cpp /opt/llama.cpp && \
     cmake --build build -j"$(nproc)" && \
     install -m0755 build/bin/* /usr/local/bin/
 
-# Startscript
 COPY start-gemma34b.sh /usr/local/bin/start-gemma34b.sh
 RUN chmod +x /usr/local/bin/start-gemma34b.sh
 
-# Defaults + konservative CUDA-Settings (bei Bedarf anpassen)
 ENV DATA_DIR=/data/models \
     MODEL_REPO=bartowski/google_gemma-3-4b-it-GGUF \
     MODEL_FILE=gemma-3-4b-it-Q5_K_M.gguf \
