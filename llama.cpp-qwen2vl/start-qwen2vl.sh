@@ -24,6 +24,6 @@ if [ -n "${HF_TOKEN:-}" ]; then export HUGGING_FACE_HUB_TOKEN="$HF_TOKEN"; fi
 
 echo "[start] launching llama-server (Qwen2-VL-2B) on $HOST:$PORT"
 exec llama-server --host "$HOST" --port "$PORT" \
-  -m "$DATA_DIR/qwen2vl-2b/$MODEL_FILE" \
+  -m "$DATA_DIR/qwen2vl-2b/$MODEL_FILE" --jinja \
   --mmproj "$DATA_DIR/qwen2vl-2b/$MMPROJ_FILE" \
   -c "$CTX" -ngl "$NGL" --threads "$THREADS" --parallel 1
