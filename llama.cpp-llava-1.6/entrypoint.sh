@@ -14,7 +14,7 @@ PORT="8080"
 # PERFORMANCE-OPTIMIERUNG: Kontext reduziert, um VRAM freizugeben
 CTX="4096"
 # PERFORMANCE-OPTIMIERUNG: Alle Layer auf die GPU geladen für maximale Geschwindigkeit
-NGL="99"
+NGL="30"
 THREADS="6"
 
 MODEL_DIR="$DATA_DIR/$MODEL_NAME"
