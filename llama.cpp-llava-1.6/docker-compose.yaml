@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  llava_1_6_7b:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: llava-1.6-7b-gguf-server:latest
+    container_name: llava_1_6_7b
+    ports:
+      - "${HOST_PORT}:8080"
+    volumes:
+      - /data:/data
+      - ./entrypoint.sh:/usr/local/bin/entrypoint.sh
+    env_file:
+      - .env
+    environment:
+      # Behält die CUDA-Variablen bei, der Rest kommt aus der .env-Datei
+      GGML_CUDA_FORCE_CUBLAS: "1"
+      GGML_CUDA_DISABLE_GRAPHS: "1"
+    devices:
+      - "nvidia.com/gpu=all"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/v1/models >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
