@@ -13,6 +13,6 @@ services:
       - /data/comfyui/text_encoders:/opt/ComfyUI/text_encoders
       - /data/comfyui/diffusion_models:/opt/ComfyUI/diffusion_models
       - /data/comfyui/vae:/opt/ComfyUI/vae
-      #- /data/comfyui/custom_nodes:/opt/ComfyUI/custom_nodes
+      - /data/comfyui/custom_nodes:/opt/ComfyUI/custom_nodes
     devices:
       - nvidia.com/gpu=all

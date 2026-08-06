@@ -1,0 +1,62 @@
+version: "3.8"
+
+services:
+  qwen35-4b-vision:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        LLAMA_REF: master
+        BUILD_JOBS: "4"
+
+    image: qwen35-4b-vision:latest
+    container_name: qwen35-4b-vision
+
+    ports:
+      - "8092:8080"
+
+    volumes:
+      - /data:/data
+
+    environment:
+      HF_TOKEN: ${HF_TOKEN:?set HF_TOKEN in your .env}
+      DATA_DIR: /data/models/qwen35-4b-vision
+      HF_HOME: /data/models/.huggingface
+      MODEL_REPO: unsloth/Qwen3.5-4B-GGUF
+      # MODEL_FILE: Qwen3.5-4B-Q4_K_M.gguf
+      MODEL_FILE: Qwen3.5-4B-Q5_K_M.gguf
+      MMPROJ_FILE: mmproj-F16.gguf
+      MODEL_ALIAS: qwen3.5-4b-vision
+      HOST: 0.0.0.0
+      PORT: "8080"
+
+      CTX: "4096"
+      NGL: auto
+
+      BATCH: "1024"
+      UBATCH: "256"
+
+      CACHE_TYPE_K: q8_0
+      CACHE_TYPE_V: q8_0
+      FLASH_ATTN: "on"
+
+      IMAGE_MIN_TOKENS: "1024"
+      IMAGE_MAX_TOKENS: "1024"
+      MTMD_BATCH_MAX_TOKENS: "1024"
+
+      LLAMA_ARG_FIT_TARGET: "256"
+      LLAMA_ARG_LOG_VERBOSITY: "4"
+
+    devices:
+      - "nvidia.com/gpu=all"
+
+    restart: unless-stopped
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - curl -sf http://localhost:8080/v1/models >/dev/null || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10m
