@@ -1,0 +1,15 @@
+services:
+  wyoming-whisper-trt:
+    build: .
+    image: local/wyoming-whisper-trt:jetpack6
+    container_name: wyoming-whisper-trt
+    network_mode: host
+    devices:
+      - "nvidia.com/gpu=all"
+    volumes:
+      - whisper-trt-data:/data
+    restart: unless-stopped
+
+volumes:
+  whisper-trt-data:
+    name: whisper-trt-data
