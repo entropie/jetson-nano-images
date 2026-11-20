@@ -1,7 +1,7 @@
 FROM captnspdr/wyoming-whisper-trt:latest-igpu
 
 ENV NVIDIA_EMBEDDED=true \
-    MODEL=base \
+    MODEL=small \
     LANGUAGE=de \
     COMPUTE_TYPE=float16 \
     DECODER_MODE=simple \

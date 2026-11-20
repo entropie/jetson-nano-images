@@ -60,3 +60,17 @@ services:
       timeout: 10s
       retries: 5
       start_period: 10m
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    entrypoint:
+      - /bin/sh
+      - -ec
+      - |
+        echo "Waiting for Whisper on port 10300..."
+        until python3 -c 'import socket; socket.create_connection(("host.docker.internal", 10300), timeout=2).close()' 2>/dev/null; do
+          sleep 3
+        done
+        echo "Whisper is ready. Starting Qwen."
+        exec /usr/local/bin/start-qwen35-4b.sh
+        
